@@ -8,9 +8,10 @@
 /// <reference types="@figma/plugin-typings" />
 
 // Command types supported by the plugin
-type CommandType = 
+type CommandType =
+  | 'UI_READY'
   | 'CREATE_WIREFRAME'
-  | 'ADD_ELEMENT' 
+  | 'ADD_ELEMENT'
   | 'STYLE_ELEMENT'
   | 'MODIFY_ELEMENT'
   | 'ARRANGE_LAYOUT'
@@ -249,6 +250,18 @@ figma.ui.onmessage = async (msg: PluginMessage) => {
   
   try {
     switch (msg.type) {
+      case 'UI_READY':
+        sendResponse({
+          type: 'UI_READY',
+          success: true,
+          data: {
+            pluginId: figma.currentPage?.parent?.id || 'unknown',
+            currentPage: figma.currentPage?.name || 'unknown'
+          },
+          _isResponse: true
+        });
+        break;
+
       // Existing command handlers
       case 'CREATE_WIREFRAME':
         await handleCreateWireframe(msg);
